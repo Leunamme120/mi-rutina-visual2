@@ -1,26 +1,24 @@
-# Etapa 1: Build
-FROM cirrusci/flutter:stable AS build
-
-# Directorio de trabajo
+# Etapa 1: Build de Flutter Web con Dart 3.4+
+FROM ghcr.io/cirruslabs/flutter:3.24.1 AS build
 WORKDIR /app
 
-# Copiar los archivos del proyecto al contenedor
+# Copiar el proyecto
 COPY . .
 
-# Obtener dependencias de Flutter
+# Descargar dependencias
 RUN flutter pub get
 
-# Construir versión web
+# Compilar Flutter Web
 RUN flutter build web --release
 
-# Etapa 2: Producción con Nginx
+# Etapa 2: Servir con Nginx
 FROM nginx:alpine
-
-# Copiar la web compilada al directorio de Nginx
 COPY --from=build /app/build/web /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-# Exponer el puerto 80
 EXPOSE 80
 
 # Iniciar Nginx en primer plano
 CMD ["nginx", "-g", "daemon off;"]
+
