@@ -1,24 +1,29 @@
-# Etapa 1: Build de Flutter Web con Dart 3.4+
-FROM ghcr.io/cirruslabs/flutter:3.24.1 AS build
+# ------------------------------
+# Etapa 1: Build con Flutter
+# ------------------------------
+FROM ghcr.io/cirruslabs/flutter:3.38.1 AS build
+
 WORKDIR /app
 
-# Copiar el proyecto
+# Copiar el proyecto Flutter
 COPY . .
 
-# Descargar dependencias
+# Obtener dependencias
 RUN flutter pub get
 
-# Compilar Flutter Web
-RUN flutter build web --release
+# Compilar APK en modo release
+RUN flutter build apk --release
 
-# Etapa 2: Servir con Nginx
-FROM nginx:alpine
-COPY --from=build /app/build/web /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
 
-EXPOSE 80
+# ------------------------------
+# Etapa 2: Imagen final
+# ------------------------------
+FROM alpine:latest
 
-# Iniciar Nginx en primer plano
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /output
 
+# Copia solo el APK generado
+COPY --from=build /app/build/app/outputs/flutter-apk/app-release.apk .
+
+# Comando por defecto
+CMD ["ls", "-l", "/output"]
