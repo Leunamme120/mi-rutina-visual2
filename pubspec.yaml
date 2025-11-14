@@ -24,7 +24,7 @@ dependencies:
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
   cloud_firestore: ^5.4.4
-  audioplayers: ^6.5.1
+  audioplayers: ^6.4.0
   numberpicker: ^2.1.1
   flutter_colorpicker: ^1.1.0
   flutter_local_notifications: ^17.1.2
@@ -50,4 +50,5 @@ flutter:
     - assets/images/pictogramas/
     - assets/images/premios/
     - assets/google_logo.png
+
 
